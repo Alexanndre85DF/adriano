@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-brasil-green to-dark-green text-white font-sans;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brasil-yellow text-brasil-green font-semibold py-3 px-6 rounded-lg 
+           hover:bg-light-yellow transition-all duration-200 transform hover:scale-105 
+           shadow-lg hover:shadow-xl;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent border-2 border-brasil-yellow text-brasil-yellow 
+           font-semibold py-3 px-6 rounded-lg hover:bg-brasil-yellow 
+           hover:text-brasil-green transition-all duration-200 transform hover:scale-105;
+  }
+  
+  .card {
+    @apply bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl 
+           p-6 shadow-xl;
+  }
+  
+  .dialogue-box {
+    @apply bg-black/50 backdrop-blur-sm border border-brasil-yellow/30 
+           rounded-xl p-6 shadow-2xl;
+  }
+  
+  .status-bar {
+    @apply bg-gradient-to-r from-brasil-green to-dark-green rounded-lg 
+           p-4 shadow-lg border border-brasil-yellow/20;
+  }
+  
+  .battle-container {
+    @apply bg-gradient-to-br from-red-900/80 to-red-700/80 backdrop-blur-sm 
+           border border-red-500/30 rounded-xl p-6 shadow-2xl;
+  }
+} 
