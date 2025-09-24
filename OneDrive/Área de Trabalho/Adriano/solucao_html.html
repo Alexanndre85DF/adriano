@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Dados - Alunos Química</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .search-section {
+            padding: 30px;
+            background: white;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .data-table th {
+            background: #34495e;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .cpf-cell {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .status-active {
+            background: #27ae60;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .status-inactive {
+            background: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .pagination button {
+            padding: 10px 15px;
+            border: none;
+            background: #3498db;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .pagination button:hover {
+            background: #2980b9;
+        }
+
+        .pagination button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Análise de Dados - Alunos Química</h1>
+            <p>Sistema de cruzamento e análise de dados por CPF</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="total-alunos">487</div>
+                <div class="stat-label">Total de Alunos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="cpfs-unicos">484</div>
+                <div class="stat-label">CPFs Únicos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="dados-completos">388</div>
+                <div class="stat-label">Dados Cruzados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="novos-dados">99</div>
+                <div class="stat-label">Novos Registros</div>
+            </div>
+        </div>
+
+        <div class="search-section">
+            <input type="text" 
+                   class="search-box" 
+                   placeholder="🔍 Digite o CPF, nome ou matrícula para buscar..."
+                   id="searchInput">
+            
+            <table class="data-table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>CPF</th>
+                        <th>Nome</th>
+                        <th>Matrícula</th>
+                        <th>Status</th>
+                        <th>Curso</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Polo</th>
+                        <th>Turma</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Dados serão carregados via JavaScript -->
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <button id="prevBtn" onclick="changePage(-1)">← Anterior</button>
+                <span id="pageInfo">Página 1 de 1</span>
+                <button id="nextBtn" onclick="changePage(1)">Próxima →</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>💡 Sistema desenvolvido para cruzamento inteligente de dados acadêmicos</p>
+            <p>📧 Suporte: sistema.quimica@universidade.edu.br</p>
+        </div>
+    </div>
+
+    <script>
+        // Dados simulados (seriam carregados do arquivo Excel processado)
+        const dadosUnificados = [
+            {
+                cpf: "016.145.441-07",
+                nome: "João Silva Santos",
+                matricula: "2017113560",
+                status: "Ativo",
+                curso: "Química",
+                email: "joao.silva@email.com",
+                telefone: "(63) 99999-9999",
+                polo: "PALMAS-TO CENTRO",
+                turma: "QUIM-2023-A"
+            },
+            {
+                cpf: "017.462.991-50",
+                nome: "Maria Oliveira Costa",
+                matricula: "2017113492",
+                status: "Evadido",
+                curso: "Química",
+                email: "maria.costa@email.com",
+                telefone: "(63) 88888-8888",
+                polo: "GURUPI-TO ZONA RURAL",
+                turma: "QUIM-2022-B"
+            },
+            {
+                cpf: "963.221.361-00",
+                nome: "Pedro Santos Lima",
+                matricula: "2017113797",
+                status: "Ativo",
+                curso: "Química",
+                email: "pedro.lima@email.com",
+                telefone: "(63) 77777-7777",
+                polo: "ARAGUATINS-TO CENTRO",
+                turma: "QUIM-2023-A"
+            }
+        ];
+
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let filteredData = [...dadosUnificados];
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = filteredData.slice(startIndex, endIndex);
+
+            tbody.innerHTML = pageData.map(aluno => `
+                <tr>
+                    <td class="cpf-cell">${aluno.cpf}</td>
+                    <td>${aluno.nome}</td>
+                    <td>${aluno.matricula}</td>
+                    <td><span class="status-${aluno.status.toLowerCase() === 'ativo' ? 'active' : 'inactive'}">${aluno.status}</span></td>
+                    <td>${aluno.curso}</td>
+                    <td>${aluno.email}</td>
+                    <td>${aluno.telefone}</td>
+                    <td>${aluno.polo}</td>
+                    <td>${aluno.turma}</td>
+                </tr>
+            `).join('');
+
+            updatePagination();
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages}`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+
+        function changePage(direction) {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            const newPage = currentPage + direction;
+            
+            if (newPage >= 1 && newPage <= totalPages) {
+                currentPage = newPage;
+                renderTable();
+            }
+        }
+
+        function searchData() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredData = dadosUnificados.filter(aluno => 
+                aluno.cpf.toLowerCase().includes(searchTerm) ||
+                aluno.nome.toLowerCase().includes(searchTerm) ||
+                aluno.matricula.toLowerCase().includes(searchTerm) ||
+                aluno.email.toLowerCase().includes(searchTerm)
+            );
+            
+            currentPage = 1;
+            renderTable();
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', searchData);
+
+        // Inicializar
+        renderTable();
+    </script>
+</body>
+</html>
